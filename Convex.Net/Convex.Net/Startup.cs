@@ -20,7 +20,7 @@ namespace Convex.Net {
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
             services.AddMvc();
-            services.Add(new ServiceDescriptor(typeof(Server), new Server(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 56000))));
+            services.Add(new ServiceDescriptor(typeof(IrcService), new IrcService(new IPEndPoint(IPAddress.Parse("127.0.0.1"), 56000))));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
