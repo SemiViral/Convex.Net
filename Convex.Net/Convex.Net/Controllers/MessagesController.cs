@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Convex.Net.Controllers {
     [Route("api/[controller]")]
-    public class ValuesController : Controller {
+    public class MessagesController : Controller {
         // GET api/values
         [HttpGet]
         public IEnumerable<string> Get() {
@@ -27,5 +28,11 @@ namespace Convex.Net.Controllers {
         // DELETE api/values/5
         [HttpDelete("{id}")]
         public void Delete(int id) { }
+
+
+        [HttpGet("{datetime}")]
+        public void Get(string lastMessageReceivedDateTime) {
+            // todo get logic
+        }
     }
 }
