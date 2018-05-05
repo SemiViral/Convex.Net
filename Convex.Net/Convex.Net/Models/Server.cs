@@ -21,7 +21,7 @@ namespace Convex.Net.Models {
         #region INIT
 
         public async Task Initialise() {
-
+            await client.Initialise();
         }
 
         #endregion
