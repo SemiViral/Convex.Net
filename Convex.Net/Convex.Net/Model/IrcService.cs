@@ -9,7 +9,7 @@ using Convex.IRC.ComponentModel.Event;
 using Convex.IRC.Model;
 
 namespace Convex.Net.Model {
-    public class Server {
+    public class IrcService {
         #region MEMBERS
 
         public Client Client { get; }
@@ -20,7 +20,7 @@ namespace Convex.Net.Model {
 
         #endregion
 
-        public Server(IPEndPoint ipAddress) {
+        public IrcService(IPEndPoint ipAddress) {
             IpAddress = ipAddress;
 
             Client = new Client(IpAddress);
@@ -28,13 +28,15 @@ namespace Convex.Net.Model {
 
             Messages = new List<ServerMessage>();
 
-            Debug.WriteLine("Server started");
+            Debug.WriteLine("IrcService started");
         }
 
         #region EVENT
 
         private Task OnClientChannelMessaged(object sender, ServerMessagedEventArgs args) {
             Messages.Add(args.Message);
+
+            Debug.WriteLine(args.Message.RawMessage);
 
             return Task.CompletedTask;
         }
