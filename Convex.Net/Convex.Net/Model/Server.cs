@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -26,6 +27,8 @@ namespace Convex.Net.Model {
             Client.Server.ChannelMessaged += OnClientChannelMessaged;
 
             Messages = new List<ServerMessage>();
+
+            Debug.WriteLine("Server started");
         }
 
         #region EVENT
