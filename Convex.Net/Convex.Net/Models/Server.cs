@@ -1,22 +1,17 @@
-﻿using System.Net;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 using Convex.IRC;
 
-namespace Convex.Net.Models {
+namespace Convex.Net.Models
+{
     public class Server {
-        #region MEMBERS
-
         private Client client { get; set; }
 
-        private IPEndPoint ipAddress { get; set; }
+        public Server(IPEndPoint ipAddress) {
 
-        #endregion
-
-        public Server(IPEndPoint ipAddress) { }
-
-        #region INIT
-
-        public void Initialise() { }
-
-        #endregion
+        }
     }
 }
