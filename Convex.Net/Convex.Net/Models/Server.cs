@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Threading.Tasks;
 using Convex.IRC;
 
 namespace Convex.Net.Models {
@@ -16,5 +17,13 @@ namespace Convex.Net.Models {
 
             client = new Client(IpAddress);
         }
+
+        #region INIT
+
+        public async Task Initialise() {
+
+        }
+
+        #endregion
     }
 }
