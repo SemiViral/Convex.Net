@@ -1,17 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
+﻿using System.Net;
 using Convex.IRC;
 
-namespace Convex.Net.Models
-{
+namespace Convex.Net.Models {
     public class Server {
-        private Client client { get; set; }
+        #region MEMBERS
+
+        private Client client { get; }
+
+        public IPEndPoint IpAddress { get; }
+
+        #endregion
 
         public Server(IPEndPoint ipAddress) {
+            IpAddress = ipAddress;
 
+            client = new Client(IpAddress);
         }
     }
 }

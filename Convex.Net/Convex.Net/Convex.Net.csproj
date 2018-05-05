@@ -16,4 +16,10 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="Convex.IRC">
+      <HintPath>..\..\..\Convex.IRC\Convex.IRC\bin\Debug\netstandard2.0\Convex.IRC.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
