@@ -21,6 +21,7 @@ namespace Convex.Net.Controllers {
         //GET api/irc
         [HttpGet("{dateTime}")]
         public List<ServerMessage> Get(DateTime dateTime) {
+            // DateTime.MinValue == 1/1/0001 12:00:00 AM
             return IrcClientReference.GetMessagesByDateTimeOrDefault(dateTime, DateTimeOrdinal.After).ToList();
         }
     }
