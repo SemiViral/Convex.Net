@@ -29,7 +29,7 @@ namespace Convex.Net.Model {
 
             Messages = new List<ServerMessage>();
 
-            Debug.WriteLine("IrcService started");
+            Task.Run(() => Client.Initialise());
         }
 
         #region EVENT
