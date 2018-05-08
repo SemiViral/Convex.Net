@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Convex.IRC;
 using Convex.IRC.ComponentModel.Event;
@@ -14,16 +13,18 @@ namespace Convex.Net.Model {
 
         public Client Client { get; }
 
-        public IPEndPoint IpAddress { get; }
+        public string Address { get; }
+        public int Port { get; }
 
         private List<ServerMessage> Messages { get; }
 
         #endregion
 
-        public IrcService(IPEndPoint ipAddress) {
-            IpAddress = ipAddress;
+        public IrcService(string address, int port) {
+            Address = address;
+            Port = port;
 
-            Client = new Client(IpAddress);
+            Client = new Client(Address, Port);
             Client.Server.ChannelMessaged += OnClientChannelMessaged;
 
             Messages = new List<ServerMessage>();
