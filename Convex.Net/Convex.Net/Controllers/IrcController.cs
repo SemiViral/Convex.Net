@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Convex.IRC.Model;
 using Convex.Net.Model;
@@ -15,11 +16,9 @@ namespace Convex.Net.Controllers {
         }
 
         //GET api/irc
-        [HttpGet]
-        public string Get() {            
-            List<ServerMessage> temporaryList = IrcClientReference.GetMessagesByDateTimeOrDefault(DateTime.MinValue, DateTimeOrdinal.After).ToList();
-
-            return string.Join("\n", temporaryList);
+        [HttpGet("{dateTime}")]
+        public List<ServerMessage> Get(DateTime dateTime) {
+            return IrcClientReference.GetMessagesByDateTimeOrDefault(dateTime, DateTimeOrdinal.After).ToList();
         }
     }
 }
