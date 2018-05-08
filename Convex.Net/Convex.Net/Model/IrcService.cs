@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Convex.IRC;
 using Convex.IRC.ComponentModel.Event;
@@ -24,12 +25,11 @@ namespace Convex.Net.Model {
             Address = address;
             Port = port;
 
-            Client = new Client(Address, Port);
-            Client.Server.ChannelMessaged += OnClientChannelMessaged;
-
             Messages = new List<ServerMessage>();
 
-            Task.Run(() => Client.Initialise());
+            Client = new Client(Address, Port);
+            Client.Server.ChannelMessaged += OnClientChannelMessaged;
+            ThreadPool.QueueUserWorkItem(async delegate { await RunIrcService(); });
         }
 
         #region EVENT
@@ -53,6 +53,11 @@ namespace Convex.Net.Model {
         #endregion
 
         #region METHODS
+
+        private async Task RunIrcService() {
+            await Client.Initialise();
+            await Client.BeginListenAsync();
+        }
 
         public IEnumerable<ServerMessage> GetMessagesByDateTimeOrDefault(DateTime referenceTime, DateTimeOrdinal dateTimeOrdinal) {
             IEnumerable<ServerMessage> temporaryList = null;
