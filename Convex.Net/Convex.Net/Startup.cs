@@ -1,4 +1,6 @@
-﻿using Convex.Net.Model;
+﻿using System;
+using System.Diagnostics;
+using Convex.Net.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +17,8 @@ namespace Convex.Net {
 
         public Startup(IConfiguration configuration) {
             Configuration = configuration;
+
+            Debug.WriteLine($"|||| {DateTime.MinValue} ||||");
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
