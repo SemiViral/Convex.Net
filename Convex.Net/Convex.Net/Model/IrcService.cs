@@ -64,10 +64,10 @@ namespace Convex.Net.Model {
 
             switch (dateTimeOrdinal) {
                 case DateTimeOrdinal.Before:
-                    temporaryList = Messages.Where(message => message.Timestamp > referenceTime);
+                    temporaryList = Messages.Where(message => message.Timestamp < referenceTime);
                     break;
                 case DateTimeOrdinal.After:
-                    temporaryList = Messages.Where(message => message.Timestamp < referenceTime);
+                    temporaryList = Messages.Where(message => message.Timestamp > referenceTime);
                     break;
                 default:
                     break;

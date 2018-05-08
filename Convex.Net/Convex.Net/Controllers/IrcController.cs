@@ -16,7 +16,7 @@ namespace Convex.Net.Controllers {
 
         //GET api/irc
         [HttpGet]
-        public string Get() {
+        public string Get() {            
             List<ServerMessage> temporaryList = IrcClientReference.GetMessagesByDateTimeOrDefault(DateTime.MinValue, DateTimeOrdinal.After).ToList();
 
             return string.Join("\n", temporaryList);
