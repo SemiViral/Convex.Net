@@ -20,6 +20,8 @@ namespace Convex.Net.Controllers {
         }
 
         [HttpGet("{passphrase}")]
-        public void Get(string passphrase) { }
+        public bool Get(string passphrase) {
+
+        }
     }
 }
