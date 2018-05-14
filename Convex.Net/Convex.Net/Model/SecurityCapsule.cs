@@ -1,9 +1,20 @@
-﻿namespace Convex.Net.Model {
-    public static class SecurityCapsule {
-        public static bool IsInitialised { get; private set; }
+﻿using System.Security.Cryptography;
 
-        public static void Initialise(string passphrase) {
+namespace Convex.Net.Model {
+    public class SecurityCapsule {
+        #region MEMBERS
 
+        private SHA512 Hash { get; }
+
+        public bool IsInitialised { get; private set; }
+
+        #endregion
+
+        #region INTERFACE IMPLEMENTATION
+
+        public void Initialise(string passphrase) {
         }
+
+        #endregion
     }
 }
