@@ -44,6 +44,18 @@ namespace Convex.Net.Model {
             return key;
         }
 
+        private int RandomPrime() {
+            byte[] prime = new byte[32];
+
+            int PrimeInt() => BitConverter.ToInt32(prime, 0);
+
+            do {
+                Random.GetNonZeroBytes(prime);
+            } while (!IsPrime(PrimeInt()));
+
+            return PrimeInt();
+        }
+
         private static bool IsPrime(int number) {
             if (number == 1)
                 return false;
@@ -54,10 +66,9 @@ namespace Convex.Net.Model {
 
             int boundary = (int)Math.Floor(Math.Sqrt(number));
 
-            for (int i = 3; i <= boundary; i += 2) {
+            for (int i = 3; i <= boundary; i += 2)
                 if (number % i == 0)
                     return false;
-            }
 
             return true;
         }
