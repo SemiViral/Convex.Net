@@ -10,7 +10,7 @@ namespace Convex.Net.Controllers {
         #region MEMBERS
 
         private Passphrase Passphrase { get; }
-        public ImmutableArray<Guid> VerifiedClients { get; }
+        private ImmutableArray<Guid> VerifiedClients { get; }
 
         #endregion
 
@@ -26,7 +26,10 @@ namespace Convex.Net.Controllers {
 
         [HttpPost]
         public void Post(string guid, string passphrase) {
-            return Passphrase.Verify(passphrase);
+            if (!Passphrase.Verify(passphrase))
+                return;
+
+            VerifiedClients.Add(Guid.Parse(guid));
         }
     }
 }
