@@ -11,7 +11,7 @@ namespace Convex.Net.Model {
         private RandomNumberGenerator Random { get; }
         private RSACryptoServiceProvider CryptoService { get; }
         private byte[] PublicKey { get; }
-        private byte[] PrivateKey { get; set; }
+        private byte[] PrivateKey { get; }
 
         public bool IsInitialised { get; }
 
@@ -20,10 +20,10 @@ namespace Convex.Net.Model {
 
         public Handshake(int privateKeySize) {
             CryptoService = new RSACryptoServiceProvider();
-
             Random = RandomNumberGenerator.Create();
 
-            GenerateKey(privateKeySize);
+            PublicKey = GenerateKey(privateKeySize);
+            PrivateKey = GenerateKey(privateKeySize);
 
             IsInitialised = true;
         }
