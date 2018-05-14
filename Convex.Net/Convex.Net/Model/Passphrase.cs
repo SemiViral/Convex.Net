@@ -2,15 +2,15 @@
 using System.Text;
 
 namespace Convex.Net.Model {
-    public class SecurityCapsule {
+    public class Passphrase {
         #region MEMBERS
 
-        private string Hash { get; }
+        private byte[] Hash { get; }
 
         #endregion
 
 
-        public SecurityCapsule(string passphrase) {
+        public Passphrase(string passphrase) {
             using (SHA512 hashManager = SHA512.Create()) {
                 Hash = hashManager.ComputeHash(Encoding.UTF8.GetBytes(passphrase));
             }
