@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 namespace Convex.Net.Model {
-    public class Passphrase {
+    public class Handshake {
         #region MEMBERS
 
         private byte[] Hash { get; }
@@ -11,7 +11,7 @@ namespace Convex.Net.Model {
         #endregion
 
 
-        public Passphrase(string passphrase) {
+        public Handshake(string passphrase) {
             using (SHA512 hashManager = SHA512.Create()) {
                 Hash = hashManager.ComputeHash(Encoding.UTF8.GetBytes(passphrase));
             }
