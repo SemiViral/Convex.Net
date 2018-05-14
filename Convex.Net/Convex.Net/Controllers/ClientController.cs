@@ -7,5 +7,10 @@ namespace Convex.Net.Controllers {
         public bool Get() {
             return true;
         }
+
+        [HttpPost("{hashedPass}")]
+        public void Post(string hashedPass) {
+
+        }
     }
 }
