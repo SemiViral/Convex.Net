@@ -12,7 +12,7 @@ namespace Convex.Net.Model {
         
         private RandomNumberGenerator Random { get; }
         private PublicKey PublicKey { get; }
-        private int PrivateKey { get; }
+        private int PrivateKey { get; set; }
 
         #endregion
 
@@ -20,11 +20,7 @@ namespace Convex.Net.Model {
         public Handshake() {
             Random = RandomNumberGenerator.Create();
 
-            byte[] temp = new byte[32];
-            Random.GetNonZeroBytes(temp);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(temp);
-            PrivateKey = BitConverter.ToInt32(temp, 0);
+            GeneratePrivateKey();
 
 
             PublicKey = new PublicKey();
@@ -35,7 +31,13 @@ namespace Convex.Net.Model {
         }
 
         private void GeneratePrivateKey(int size) {
+            byte[] privateKey = new byte[size];
+            Random.GetNonZeroBytes(privateKey);
 
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(privateKey);
+
+            PrivateKey = BitConverter.ToInt32(privateKey, 0);
         }
     }
 }
