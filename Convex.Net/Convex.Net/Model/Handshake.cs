@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Convex.Net.Model {
     public class Handshake {
         #region MEMBERS
 
         private RandomNumberGenerator Random { get; }
-        private RSACryptoServiceProvider CryptoService { get; }
         private byte[] PublicKey { get; }
         private byte[] PrivateKey { get; }
 
@@ -19,17 +16,22 @@ namespace Convex.Net.Model {
 
 
         public Handshake(int privateKeySize) {
-            CryptoService = new RSACryptoServiceProvider();
             Random = RandomNumberGenerator.Create();
 
-            PublicKey = GenerateKey(privateKeySize);
-            PrivateKey = GenerateKey(privateKeySize);
+            using (RSACryptoServiceProvider cryptoService = new RSACryptoServiceProvider()) {
+                PublicKey = GenerateKey(privateKeySize);
+                PrivateKey = GenerateKey(privateKeySize);
+
+                RSAParameters CryptoParams = cryptoService.ExportParameters(false);
+                cryptoService.ImportParameters(CryptoParams.Modulus = PublicKey);
+                RijndaelManaged RM = new RijndaelManaged();
+            }
 
             IsInitialised = true;
         }
 
         public bool Verify(string passphrase) {
-            return PrivateKey.SequenceEqual(Encoding.UTF8.GetBytes(passphrase));
+            return PrivateKey.(Encoding.UTF8.GetBytes(passphrase));
         }
 
         private byte[] GenerateKey(int size) {
@@ -40,6 +42,24 @@ namespace Convex.Net.Model {
                 Array.Reverse(key);
 
             return key;
+        }
+
+        private static bool IsPrime(int number) {
+            if (number == 1)
+                return false;
+            if (number == 2)
+                return true;
+            if (number % 2 == 0)
+                return false;
+
+            int boundary = (int)Math.Floor(Math.Sqrt(number));
+
+            for (int i = 3; i <= boundary; i += 2) {
+                if (number % i == 0)
+                    return false;
+            }
+
+            return true;
         }
     }
 }

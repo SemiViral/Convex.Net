@@ -8,13 +8,13 @@ namespace Convex.Net.Controllers {
     public class ClientController {
         #region MEMBERS
 
-        private Passphrase Passphrase { get; }
+        private Handshake Handshake { get; }
         private ImmutableArray<Guid> VerifiedClients { get; }
 
         #endregion
 
-        public ClientController(Passphrase passphrase) {
-            Passphrase = passphrase;
+        public ClientController(Handshake handshake) {
+            Handshake = handshake;
             VerifiedClients = ImmutableArray<Guid>.Empty;
         }
 
@@ -25,7 +25,7 @@ namespace Convex.Net.Controllers {
 
         [HttpPost]
         public void Post(string guid, string passphrase) {
-            if (!Passphrase.Verify(passphrase))
+            if (!Handshake.Verify(passphrase))
                 return;
 
             VerifiedClients.Add(Guid.Parse(guid));
