@@ -1,29 +1,27 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using Microsoft.EntityFrameworkCore.ValueGeneration.Internal;
 
 namespace Convex.Net.Model {
     public class Handshake {
         #region MEMBERS
-        
+
         private RandomNumberGenerator Random { get; }
         private PublicKey PublicKey { get; }
         private int PrivateKey { get; set; }
 
+        public bool IsInitialised { get; }
+
         #endregion
 
 
-        public Handshake() {
+        public Handshake(int privateKeySize) {
             Random = RandomNumberGenerator.Create();
 
-            GeneratePrivateKey();
+            GeneratePrivateKey(privateKeySize);
 
-
-            PublicKey = new PublicKey();
+            IsInitialised = true;
         }
 
         public bool Verify(string passphrase) {
