@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using Convex.Net.Model;
+﻿using Convex.Net.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -12,6 +10,7 @@ namespace Convex.Net {
 
         public IConfiguration Configuration { get; }
         public IrcService IrcClient { get; private set; }
+        private Passphrase Passphrase { get; set; }
 
         #endregion
 
@@ -22,6 +21,7 @@ namespace Convex.Net {
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
             services.AddMvc();
+            services.Add(new ServiceDescriptor(typeof(Passphrase), Passphrase = new Passphrase("temporarypass")));
             services.Add(new ServiceDescriptor(typeof(IrcService), IrcClient = new IrcService("irc.foonetic.net", 6667)));
         }
 
