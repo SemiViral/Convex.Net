@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace Convex.Net.Model {
@@ -23,7 +24,7 @@ namespace Convex.Net.Model {
                 tryPassHash = hashManager.ComputeHash(Encoding.UTF8.GetBytes(passphrase));
             }
 
-            return Hash == tryPassHash;
+            return Hash.SequenceEqual(tryPassHash);
         }
     }
 }
