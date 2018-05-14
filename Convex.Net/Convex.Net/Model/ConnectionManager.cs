@@ -7,6 +7,7 @@ namespace Convex.Net.Controllers
 {
     public class ConnectionManager
     {
+
         public ConnectionManager() {
 
         }
