@@ -21,7 +21,7 @@ namespace Convex.Net.Controllers {
 
         [HttpGet("{passphrase}")]
         public bool Get(string passphrase) {
-
+            return Passphrase.Verify(passphrase);
         }
     }
 }
