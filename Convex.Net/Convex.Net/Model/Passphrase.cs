@@ -17,5 +17,13 @@ namespace Convex.Net.Model {
         }
 
         public bool Verify(string passphrase) {
+            byte[] tryPassHash;
+
+            using (SHA512 hashManager = SHA512.Create()) {
+                tryPassHash = hashManager.ComputeHash(Encoding.UTF8.GetBytes(passphrase));
+            }
+
+            return Hash.Equals(tryPassHash);
+        }
     }
 }
