@@ -8,8 +8,8 @@ namespace Convex.Net.Controllers {
             return true;
         }
 
-        [HttpPost("{hashedPass}")]
-        public void Post(string hashedPass) {
+        [HttpPost("{passphrase}")]
+        public void Post(string passphrase) {
 
         }
     }
