@@ -14,7 +14,7 @@ namespace Convex.Net.Controllers {
             Passphrase = passphrase;
         }
 
-        [HttpGet("{isAlive}")]
+        [HttpGet]
         public bool Get() {
             return true;
         }

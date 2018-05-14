@@ -23,7 +23,7 @@ namespace Convex.Net.Model {
                 tryPassHash = hashManager.ComputeHash(Encoding.UTF8.GetBytes(passphrase));
             }
 
-            return Hash.Equals(tryPassHash);
+            return Hash == tryPassHash;
         }
     }
 }
