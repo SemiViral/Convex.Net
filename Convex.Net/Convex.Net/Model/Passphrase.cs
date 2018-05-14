@@ -15,5 +15,7 @@ namespace Convex.Net.Model {
                 Hash = hashManager.ComputeHash(Encoding.UTF8.GetBytes(passphrase));
             }
         }
+
+        public bool Verify(string passphrase) {
     }
 }
