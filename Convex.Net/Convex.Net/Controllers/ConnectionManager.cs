@@ -10,5 +10,9 @@ namespace Convex.Net.Controllers
         public ConnectionManager() {
 
         }
+
+        public void Ping(string address, int port) {
+
+        }
     }
 }
