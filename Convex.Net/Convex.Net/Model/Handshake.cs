@@ -14,6 +14,8 @@ namespace Convex.Net.Model {
 
         public bool IsInitialised { get; }
 
+        private int PublicKeyBaseInt64 => BitConverter.ToInt32(PublicKey.Item1, 0);
+
         #endregion
 
 
@@ -27,13 +29,13 @@ namespace Convex.Net.Model {
             IsInitialised = true;
         }
 
-        public string Decrypt(byte[] encryption, string data) {
-            string decryptedData = string.Empty;
-
-
-            return decryptedData;
+        private long PublicKeyInt64() {
+            return BitConverter.ToInt64(PublicKey.Item2, 0);
         }
 
+        private long PrivateKeyInt64() {
+            return BitConverter.ToInt64(PrivateKey, 0);
+        }
 
         #region UTIL
 
@@ -72,8 +74,31 @@ namespace Convex.Net.Model {
         }
 
         private void EnsurePrivateKeySize() {
-            while (BitConverter.ToInt64(PrivateKey, 0) > BitConverter.ToInt64(PublicKey.Item2, 0))
+            while (PrivateKeyInt64() > PublicKeyInt64())
                 Random.GetBytes(PrivateKey);
+        }
+
+        #endregion
+
+        #region CRYPTO
+
+        public string Encrypt(byte[] privateKey, string data) {
+            string encrytpedData = string.Empty;
+
+            return encrytpedData;
+        }
+
+        public string Decrypt(byte[] privateKey, string data) {
+            string decryptedData = string.Empty;
+
+
+            return decryptedData;
+        }
+
+        private byte[] GetMasterKey(byte[] privateKey) {
+            long privateKeyFlat = BitConverter.ToInt64(privateKey, 0);
+
+            return BitConverter.GetBytes(PublicKeyBaseInt64 ^ (PrivateKeyInt64() * privateKeyFlat % PublicKeyInt64()));
         }
 
         #endregion
