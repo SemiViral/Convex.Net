@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace Convex.Net.Model {
     public class Handshake {
         #region MEMBERS
 
+        private const int KEY_SIZE = 8;
+        private const int BASE_SIZE = 4;
+
         private RandomNumberGenerator Random { get; }
-        private byte[] PublicKey { get; }
+        private Tuple<byte[], byte[]> PublicKey { get; }
         private byte[] PrivateKey { get; }
 
         public bool IsInitialised { get; }
@@ -15,45 +17,40 @@ namespace Convex.Net.Model {
         #endregion
 
 
-        public Handshake(int privateKeySize) {
+        public Handshake() {
             Random = RandomNumberGenerator.Create();
+            PublicKey = new Tuple<byte[], byte[]>(new byte[BASE_SIZE], new byte[KEY_SIZE]);
+            PrivateKey = new byte[KEY_SIZE];
 
-            using (RSACryptoServiceProvider cryptoService = new RSACryptoServiceProvider()) {
-                PublicKey = GenerateKey(privateKeySize);
-                PrivateKey = GenerateKey(privateKeySize);
-
-                RSAParameters CryptoParams = cryptoService.ExportParameters(false);
-                cryptoService.ImportParameters(CryptoParams.Modulus = PublicKey);
-                RijndaelManaged RM = new RijndaelManaged();
-            }
+            InitialiseKeys();
 
             IsInitialised = true;
         }
 
-        public bool Verify(string passphrase) {
-            return PrivateKey.(Encoding.UTF8.GetBytes(passphrase));
+        public string Decrypt(byte[] encryption, string data) {
+            string decryptedData = string.Empty;
+
+
+            return decryptedData;
         }
 
-        private byte[] GenerateKey(int size) {
-            byte[] key = new byte[size];
-            Random.GetNonZeroBytes(key);
 
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(key);
-
-            return key;
+        private void InitialiseKeys() {
+            PublicKeyBaseToRandomPrime();
+            Random.GetBytes(PublicKey.Item2);
+            Random.GetBytes(PrivateKey);
+            EnsurePrivateKeySize();
         }
 
-        private int RandomPrime() {
-            byte[] prime = new byte[32];
+        private void EnsurePrivateKeySize() {
+            while (BitConverter.ToInt64(PrivateKey, 0) > BitConverter.ToInt64(PublicKey.Item2, 0))
+                Random.GetBytes(PrivateKey);
+        }
 
-            int PrimeInt() => BitConverter.ToInt32(prime, 0);
-
+        private void PublicKeyBaseToRandomPrime() {
             do {
-                Random.GetNonZeroBytes(prime);
-            } while (!IsPrime(PrimeInt()));
-
-            return PrimeInt();
+                Random.GetBytes(PublicKey.Item1);
+            } while (!IsPrime(BitConverter.ToInt32(PublicKey.Item1, 0)));
         }
 
         private static bool IsPrime(int number) {

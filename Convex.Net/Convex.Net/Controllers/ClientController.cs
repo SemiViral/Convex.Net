@@ -25,7 +25,7 @@ namespace Convex.Net.Controllers {
 
         [HttpPost]
         public void Post(string guid, string passphrase) {
-            if (!Handshake.Verify(passphrase))
+            if (!Handshake.Decrypt(passphrase))
                 return;
 
             VerifiedClients.Add(Guid.Parse(guid));
