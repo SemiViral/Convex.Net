@@ -83,12 +83,14 @@ namespace Convex.Net.Model {
         #region CRYPTO
 
         public string Encrypt(byte[] privateKey, string data) {
+            byte[] masterKey = GetMasterKey(privateKey);
             string encrytpedData = string.Empty;
 
             return encrytpedData;
         }
 
         public string Decrypt(byte[] privateKey, string data) {
+            byte[] masterKey = GetMasterKey(privateKey);
             string decryptedData = string.Empty;
 
 
@@ -96,9 +98,7 @@ namespace Convex.Net.Model {
         }
 
         private byte[] GetMasterKey(byte[] privateKey) {
-            long privateKeyFlat = BitConverter.ToInt64(privateKey, 0);
-
-            return BitConverter.GetBytes(PublicKeyBaseInt64 ^ (PrivateKeyInt64() * privateKeyFlat % PublicKeyInt64()));
+            return BitConverter.GetBytes(PublicKeyBaseInt64 ^ (PrivateKeyInt64() * BitConverter.ToInt64(privateKey, 0) % PublicKeyInt64()));
         }
 
         #endregion
