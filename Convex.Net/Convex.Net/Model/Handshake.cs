@@ -35,23 +35,7 @@ namespace Convex.Net.Model {
         }
 
 
-        private void InitialiseKeys() {
-            PublicKeyBaseToRandomPrime();
-            Random.GetBytes(PublicKey.Item2);
-            Random.GetBytes(PrivateKey);
-            EnsurePrivateKeySize();
-        }
-
-        private void EnsurePrivateKeySize() {
-            while (BitConverter.ToInt64(PrivateKey, 0) > BitConverter.ToInt64(PublicKey.Item2, 0))
-                Random.GetBytes(PrivateKey);
-        }
-
-        private void PublicKeyBaseToRandomPrime() {
-            do {
-                Random.GetBytes(PublicKey.Item1);
-            } while (!IsPrime(BitConverter.ToInt32(PublicKey.Item1, 0)));
-        }
+        #region UTIL
 
         private static bool IsPrime(int number) {
             if (number == 1)
@@ -69,5 +53,29 @@ namespace Convex.Net.Model {
 
             return true;
         }
+
+        #endregion
+
+        #region INIT
+
+        private void InitialiseKeys() {
+            PublicKeyBaseToRandomPrime();
+            Random.GetBytes(PublicKey.Item2);
+            Random.GetBytes(PrivateKey);
+            EnsurePrivateKeySize();
+        }
+
+        private void PublicKeyBaseToRandomPrime() {
+            do {
+                Random.GetBytes(PublicKey.Item1);
+            } while (!IsPrime(BitConverter.ToInt32(PublicKey.Item1, 0)));
+        }
+
+        private void EnsurePrivateKeySize() {
+            while (BitConverter.ToInt64(PrivateKey, 0) > BitConverter.ToInt64(PublicKey.Item2, 0))
+                Random.GetBytes(PrivateKey);
+        }
+
+        #endregion
     }
 }
