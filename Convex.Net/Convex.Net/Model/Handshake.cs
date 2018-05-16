@@ -25,6 +25,7 @@ namespace Convex.Net.Model {
 
                 publicKey = value;
                 PublicKeyInt512 = new BigInteger(publicKey);
+                AsymmetricKey = GetAsymmetricKey();
             }
         }
 
@@ -36,12 +37,24 @@ namespace Convex.Net.Model {
 
                 privateKey = value;
                 PrivateKeyInt512 = new BigInteger(privateKey);
+                AsymmetricKey = GetAsymmetricKey();
+            }
+        }
+
+        private byte[] AsymmetricKey {
+            get => asymmetricKey;
+            set {
+                asymmetricKey = value;
+                AsymmetricKeyInt = new BigInteger(asymmetricKey);
             }
         }
 
         public BigInteger PublicKeyInt512 { get; set; }
         private BigInteger PrivateKeyInt512 { get; set; }
+        private BigInteger AsymmetricKeyInt { get; set; }
 
+
+        private byte[] asymmetricKey;
         private byte[] privateKey;
         private byte[] publicKey;
 
@@ -112,7 +125,7 @@ namespace Convex.Net.Model {
         #region CRYPTO
 
         public byte[] Encrypt(byte[] externalKey, string data) {
-            byte[] masterKey = GetMasterKey(externalKey);
+            byte[] masterKey = GetSymmetricKey(externalKey);
 
             if (externalKey == null || externalKey.Length != KEY_SIZE)
                 throw new ArgumentException($"External Key need to be {KEY_SIZE} bytes.");
@@ -157,7 +170,7 @@ namespace Convex.Net.Model {
         }
 
         public string Decrypt(byte[] externalKey, string data) {
-            byte[] masterKey = GetMasterKey(externalKey);
+            byte[] masterKey = GetSymmetricKey(externalKey);
             string decryptedData = string.Empty;
 
             if (externalKey == null || externalKey.Length != KEY_SIZE)
@@ -166,8 +179,13 @@ namespace Convex.Net.Model {
             return decryptedData;
         }
 
-        private byte[] GetMasterKey(byte[] externalKey) {
-            return (BaseInt32 ^ (PrivateKeyInt512 * new BigInteger(externalKey) % PublicKeyInt512)).ToByteArray();
+        private byte[] GetAsymmetricKey() {
+            return (BaseInt32 ^ (PrivateKeyInt512 % PublicKeyInt512)).ToByteArray();
+        }
+
+        private byte[] GetSymmetricKey(byte[] externalKey)
+        {
+            return (AsymmetricKeyInt ^ (new BigInteger(externalKey) % PublicKeyInt512)).ToByteArray();
         }
 
         #endregion
