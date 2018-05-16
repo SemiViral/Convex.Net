@@ -124,22 +124,22 @@ namespace Convex.Net.Model {
 
         #region CRYPTO
 
-        public byte[] Encrypt(byte[] externalKey, string data) {
-            byte[] masterKey = GetSymmetricKey(externalKey);
+        public byte[] Encrypt(byte[] externalAsymmetricKey, byte[] data) {
+            byte[] symmetricKey = GetSymmetricKey(externalAsymmetricKey);
 
-            if (externalKey == null || externalKey.Length != KEY_SIZE)
+            if (externalAsymmetricKey == null || externalAsymmetricKey.Length != KEY_SIZE)
                 throw new ArgumentException($"External Key need to be {KEY_SIZE} bytes.");
-            if (string.IsNullOrEmpty(data))
-                throw new ArgumentException("Data payload must be at least one character in size.");
+            if (data == null)
+                throw new NullReferenceException("Data payload cannot be null.");
 
             byte[] cipherText;
             byte[] iv;
 
-            using (AesManaged aes = new AesManaged {KeySize = KEY_SIZE, BlockSize = BLOCK_SIZE, Mode = CipherMode.CBC, Padding = PaddingMode.PKCS7}) {
+            using (AesManaged aes = new AesManaged {KeySize = KEY_SIZE * 8, BlockSize = BLOCK_SIZE * 8, Mode = CipherMode.CBC, Padding = PaddingMode.PKCS7}) {
                 aes.GenerateIV();
                 iv = aes.IV;
 
-                using (ICryptoTransform encryptor = aes.CreateEncryptor(masterKey, iv)) {
+                using (ICryptoTransform encryptor = aes.CreateEncryptor(symmetricKey, iv)) {
                     using (MemoryStream cipherStream = new MemoryStream()) {
                         using (CryptoStream cryptoStream = new CryptoStream(cipherStream, encryptor, CryptoStreamMode.Write)) {
                             using (BinaryWriter binaryWriter = new BinaryWriter(cryptoStream)) {
@@ -152,7 +152,7 @@ namespace Convex.Net.Model {
                 }
             }
 
-            using (HMACSHA512 hmac = new HMACSHA512(masterKey)) {
+            using (HMACSHA512 hmac = new HMACSHA512(symmetricKey)) {
                 using (MemoryStream encryptedStream = new MemoryStream()) {
                     using (BinaryWriter binaryWriter = new BinaryWriter(encryptedStream)) {
                         binaryWriter.Write(iv);
@@ -169,23 +169,47 @@ namespace Convex.Net.Model {
             }
         }
 
-        public string Decrypt(byte[] externalKey, string data) {
-            byte[] masterKey = GetSymmetricKey(externalKey);
-            string decryptedData = string.Empty;
+        public byte[] Decrypt(byte[] externalAsymmetricKey, byte[] data) {
+            byte[] symmetricKey = GetSymmetricKey(externalAsymmetricKey);
 
-            if (externalKey == null || externalKey.Length != KEY_SIZE)
+            if (externalAsymmetricKey == null || externalAsymmetricKey.Length != KEY_SIZE)
                 throw new ArgumentException($"External Key need to be {KEY_SIZE} bytes.");
+            if (data == null)
+                throw new NullReferenceException("Data payload cannot be null.");
 
-            return decryptedData;
+            using (HMACSHA512 hmac = new HMACSHA512(externalAsymmetricKey)) {
+                byte[] sentTag = new byte[hmac.HashSize / 8];
+
+                byte[] calcTag = hmac.ComputeHash(data, 0, data.Length - sentTag.Length);
+                const int ivLength = BLOCK_SIZE / 8;
+
+                if (data.Length < sentTag.Length + ivLength) {
+                    return null;
+                }
+
+                Array.Copy(data, data.Length - sentTag.Length, sentTag, 0, sentTag.Length);
+
+                int compare = 0;
+                for (int i = 0; i < sentTag.Length; i++) {
+                    compare |= sentTag[i] ^ calcTag[i];
+                }
+
+                if (compare != 0)
+                    return null;
+
+                using (AesManaged aes = new AesManaged() {KeySize = KEY_SIZE * 8, BlockSize = BLOCK_SIZE * 8, Mode = CipherMode.CBC, Padding = PaddingMode.PKCS7}) {
+
+                }
+
+            }
         }
 
         private byte[] GetAsymmetricKey() {
             return (BaseInt32 ^ (PrivateKeyInt512 % PublicKeyInt512)).ToByteArray();
         }
 
-        private byte[] GetSymmetricKey(byte[] externalKey)
-        {
-            return (AsymmetricKeyInt ^ (new BigInteger(externalKey) % PublicKeyInt512)).ToByteArray();
+        private byte[] GetSymmetricKey(byte[] externalAsymmetricKey) {
+            return (AsymmetricKeyInt ^ (new BigInteger(externalAsymmetricKey) % PublicKeyInt512)).ToByteArray();
         }
 
         #endregion
