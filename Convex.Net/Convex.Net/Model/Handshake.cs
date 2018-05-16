@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Numerics;
 using System.Security.Cryptography;
 
@@ -7,6 +8,7 @@ namespace Convex.Net.Model {
         #region MEMBERS
 
         private const int KEY_SIZE = 512;
+        private const int BLOCK_SIZE = 256;
         private const int BASE_SIZE = 4;
 
         public bool IsInitialised { get; }
@@ -109,20 +111,57 @@ namespace Convex.Net.Model {
 
         #region CRYPTO
 
-        public string Encrypt(byte[] interprivateKey, string data) {
-            byte[] masterKey = GetMasterKey(interprivateKey);
-            string encrytpedData = string.Empty;
+        public byte[] Encrypt(byte[] externalKey, string data) {
+            byte[] masterKey = GetMasterKey(externalKey);
 
-            if (interprivateKey == null || interprivateKey.Length != KEY_SIZE)
-                throw new ArgumentException($"Interprivate Key need to be {KEY_SIZE * 8} bit!");
+            if (externalKey == null || externalKey.Length != KEY_SIZE)
+                throw new ArgumentException($"External Key need to be {KEY_SIZE} bytes.");
+            if (string.IsNullOrEmpty(data))
+                throw new ArgumentException("Data payload must be at least one character in size.");
 
-            return encrytpedData;
+            byte[] cipherText;
+            byte[] iv;
+
+            using (AesManaged aes = new AesManaged {KeySize = KEY_SIZE, BlockSize = BLOCK_SIZE, Mode = CipherMode.CBC, Padding = PaddingMode.PKCS7}) {
+                aes.GenerateIV();
+                iv = aes.IV;
+
+                using (ICryptoTransform encryptor = aes.CreateEncryptor(masterKey, iv)) {
+                    using (MemoryStream cipherStream = new MemoryStream()) {
+                        using (CryptoStream cryptoStream = new CryptoStream(cipherStream, encryptor, CryptoStreamMode.Write)) {
+                            using (BinaryWriter binaryWriter = new BinaryWriter(cryptoStream)) {
+                                binaryWriter.Write(data);
+                            }
+
+                            cipherText = cipherStream.ToArray();
+                        }
+                    }
+                }
+            }
+
+            using (HMACSHA512 hmac = new HMACSHA512(masterKey)) {
+                using (MemoryStream encryptedStream = new MemoryStream()) {
+                    using (BinaryWriter binaryWriter = new BinaryWriter(encryptedStream)) {
+                        binaryWriter.Write(iv);
+                        binaryWriter.Write(cipherText);
+                        binaryWriter.Flush();
+
+                        byte[] tag = hmac.ComputeHash(encryptedStream.ToArray());
+
+                        binaryWriter.Write(tag);
+                    }
+
+                    return encryptedStream.ToArray();
+                }
+            }
         }
 
         public string Decrypt(byte[] externalKey, string data) {
             byte[] masterKey = GetMasterKey(externalKey);
             string decryptedData = string.Empty;
 
+            if (externalKey == null || externalKey.Length != KEY_SIZE)
+                throw new ArgumentException($"External Key need to be {KEY_SIZE} bytes.");
 
             return decryptedData;
         }
