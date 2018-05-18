@@ -199,6 +199,10 @@ namespace Convex.Net.Model {
 
                 using (AesManaged aes = new AesManaged() {KeySize = KEY_SIZE * 8, BlockSize = BLOCK_SIZE * 8, Mode = CipherMode.CBC, Padding = PaddingMode.PKCS7}) {
 
+                    byte[] iv = new byte[ivLength];
+                    Array.Copy(data, 0, iv, 0, iv.Length);
+
+
                 }
 
             }
