@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Immutable;
 using Convex.Net.Model;
+using Convex.Net.Model.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Convex.Net.Controllers {

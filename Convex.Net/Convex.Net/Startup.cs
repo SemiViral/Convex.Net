@@ -1,4 +1,5 @@
 ﻿using Convex.Net.Model;
+using Convex.Net.Model.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;

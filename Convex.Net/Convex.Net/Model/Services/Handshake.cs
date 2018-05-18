@@ -3,7 +3,7 @@ using System.IO;
 using System.Numerics;
 using System.Security.Cryptography;
 
-namespace Convex.Net.Model {
+namespace Convex.Net.Model.Services {
     public class Handshake {
         #region MEMBERS
 
@@ -62,14 +62,14 @@ namespace Convex.Net.Model {
 
 
         public Handshake() {
-            Random = RandomNumberGenerator.Create();
-            Base = new byte[BASE_SIZE];
-            PublicKey = new byte[KEY_SIZE];
-            PrivateKey = new byte[KEY_SIZE];
+            //Random = RandomNumberGenerator.Create();
+            //Base = new byte[BASE_SIZE];
+            //PublicKey = new byte[KEY_SIZE];
+            //PrivateKey = new byte[KEY_SIZE];
 
-            InitialiseKeys();
+            //InitialiseKeys();
 
-            IsInitialised = true;
+            //IsInitialised = true;
 
             // todo separate PublicKey and PrivateKey into field/Property relationship
             // todo set up BigIntegers in propertyies that update when field is changed
