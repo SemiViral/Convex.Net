@@ -9,8 +9,8 @@ namespace Convex.Net {
         #region MEMBERS
 
         public IConfiguration Configuration { get; }
-        public IrcService IrcClient { get; private set; }
-        private Handshake Handshake { get; set; }
+        public IrcService IrcService { get; private set; }
+        private ClientService ClientService { get; set; }
 
         #endregion
 
@@ -21,8 +21,8 @@ namespace Convex.Net {
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services) {
             services.AddMvc();
-            services.Add(new ServiceDescriptor(typeof(Handshake), Handshake = new Handshake()));
-            services.Add(new ServiceDescriptor(typeof(IrcService), IrcClient = new IrcService("irc.foonetic.net", 6667)));
+            services.Add(new ServiceDescriptor(typeof(ClientService), ClientService = new ClientService()));
+            services.Add(new ServiceDescriptor(typeof(IrcService), IrcService = new IrcService("irc.foonetic.net", 6667)));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
