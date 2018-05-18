@@ -1,2 +1,2 @@
-POST -> client gives server a message to send
+OST -> client gives server a message to send
 GET -> client asks for any new messages
