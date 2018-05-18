@@ -7,15 +7,13 @@ namespace Convex.Net.Controllers {
     [Route("api/[controller]")]
     public class ClientController {
         #region MEMBERS
+        
+        private ClientService InterClientService { get; }
 
-        private Handshake Handshake { get; }
-        private ImmutableArray<Guid> VerifiedClients { get; }
+    #endregion
 
-        #endregion
-
-        public ClientController(Handshake handshake) {
-            Handshake = handshake;
-            VerifiedClients = ImmutableArray<Guid>.Empty;
+        public ClientController(ClientService clientService) {
+            InterClientService = clientService;
         }
 
         [HttpGet]
